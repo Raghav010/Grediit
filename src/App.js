@@ -14,6 +14,9 @@ import { Route, Routes } from 'react-router-dom';
 // make components more modular i.e the outermost div in each component needs to have w-full and h-full
 // make functionality to upload a photo in registeration
 
+// before submitting
+// add more data to profileinfo ig?
+
 function App() 
 {
   return(

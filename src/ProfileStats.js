@@ -4,8 +4,8 @@ export default function ProfileStats()
 {
     return(
         <div className="flex flex-row justify-evenly w-full h-full">
-            <div className="dropdown">
-                <label tabIndex={0} className="btn btn-outline btn-wide btn-primary gap-3 mb-3">
+            <div className="dropdown lg:dropdown-bottom dropdown-top dropdown-hover">
+                <label tabIndex={0} className="btn btn-outline lg:btn-wide btn-primary gap-3 mb-3 mt-3">
                 Followers
                 <div className="badge text-xl p-3">669</div>
                 </label>
@@ -15,8 +15,8 @@ export default function ProfileStats()
                     <p>Kylian Mbappe</p>
                 </div>
             </div>
-            <div className="dropdown">
-                <label tabIndex={0} className="btn btn-outline btn-wide btn-accent gap-3 mb-3">
+            <div className="dropdown lg:dropdown-bottom dropdown-top dropdown-hover">
+                <label tabIndex={0} className="btn btn-outline lg:btn-wide btn-accent gap-3 mb-3 mt-3">
                 Following
                 <div className="badge text-xl p-3">1.2k</div>
                 </label>

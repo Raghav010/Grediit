@@ -30,11 +30,11 @@ export default function LS()
     let modeDisplay;
     if(mode=="Login")
     {
-        modeDisplay=<Login />
+        modeDisplay=<div className="h-1/2 w-4/5 lg:w-1/3"><Login /></div>
     }
     else if(mode=="Register")
     {
-        modeDisplay=<Register />
+        modeDisplay=<div className="h-full lg:w-1/3 w-4/5"><Register /></div>
     }
 
     return (

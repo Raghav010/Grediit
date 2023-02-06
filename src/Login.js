@@ -52,21 +52,21 @@ function Login()
 
 
     return(
-        <div className="bg-purple-900 shadow-2xl rounded-xl h-1/2 w-1/3 flex flex-row justify-center items-center p-4">
+        <div className="bg-purple-900 shadow-2xl rounded-xl h-full w-full flex flex-row justify-center items-center p-4">
             <div className="flex flex-col justify-center items-center w-2/3">
-                <h1 className="text-white font-bold text-4xl pb-10">Login</h1>
+                <h1 className="text-white font-bold text-4xl pb-10 w-fit max-w-full">Login</h1>
                 <form onSubmit={validate} className="form-control">
-                    <input className="input input-ghost bg-purple-900 text-white focus:bg-white" type="text" placeholder="Username" onChange={e=>Enable(e,"username")}></input>
+                    <input className="input input-ghost bg-purple-900 text-white focus:bg-white w-full max-w-full" type="text" placeholder="Username" onChange={e=>Enable(e,"username")}></input>
                     <div className="divider"></div>
-                    <input className="input input-ghost bg-purple-900 text-white focus:bg-white" type="password" placeholder="Password" onChange={e=>Enable(e,"pass")} minLength="5"></input>
-                    <button className={"btn btn-active mt-4"+loginColor} disabled={!(usernameP && passP)}>Login {eMessage}</button>
+                    <input className="input input-ghost bg-purple-900 text-white focus:bg-white w-full max-w-full" type="password" placeholder="Password" onChange={e=>Enable(e,"pass")} minLength="5"></input>
+                    <button className={"btn btn-active mt-4"+loginColor +" w-full max-w-full"} disabled={!(usernameP && passP)}>Login {eMessage}</button>
                 </form>
             </div>
             <div className="divider divider-horizontal"></div>
             <div className="flex flex-col self-start justify-evenly h-full items-center w-1/3">
                 
                 <img className="aspect-square w-3/4" src={Grediit}></img>
-                <h1 className="text-4xl font-bold text-white">Grediit</h1>
+                <h1 className="text-3xl font-bold text-white w-fit max-w-full">Grediit</h1>
             </div>
         </div>
     );
