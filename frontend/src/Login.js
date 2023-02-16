@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import authUser from './authenticateUser';
 import Grediit from './grediit.png'
 
 
-// For this component to work it needs a box the size of the screen as its parent
+// this component takes up the entire width and height of the container
 
 function Login()
 {
@@ -11,6 +12,7 @@ function Login()
     const [passP,setPassP]=useState(false);
     const [loginColor,setLoginColor]=useState("");
     const [eMessage,setEMessage]=useState("");
+    const [loading,setLoading]=useState("");
     const navigate=useNavigate();
 
     
@@ -27,18 +29,24 @@ function Login()
         }
     };
 
+    function showProcessing()
+    {
+        setLoading("loading");
+    }
+
 
     // do server side validation here
-    function validate(e)
+    // validating the user password and username
+    async function validate(e)
     {
         e.preventDefault();
-        //console.log(e.target[0].value);
-        //console.log(e.target[1].value);
+        showProcessing();
+    
         // redirect to profile and set localstorage
-        if(e.target[0].value=="admin" && e.target[1].value=="admin")
+        const authed=await authUser(e.target[0].value,e.target[1].value);
+        //console.log(authed);
+        if(authed)
         {
-            localStorage.setItem('username',e.target[0].value)
-            localStorage.setItem('pass',e.target[1].value)
             navigate('/profile/'+e.target[0].value);
             // store username/email local storagw
             // pass it as a param to profile site
@@ -51,6 +59,7 @@ function Login()
     }
 
 
+
     return(
         <div className="bg-purple-900 shadow-2xl rounded-xl h-full w-full flex flex-row justify-center items-center p-4">
             <div className="flex flex-col justify-center items-center w-2/3">
@@ -59,7 +68,7 @@ function Login()
                     <input className="input input-ghost bg-purple-900 text-white focus:bg-white w-full max-w-full" type="text" placeholder="Username" onChange={e=>Enable(e,"username")}></input>
                     <div className="divider"></div>
                     <input className="input input-ghost bg-purple-900 text-white focus:bg-white w-full max-w-full" type="password" placeholder="Password" onChange={e=>Enable(e,"pass")} minLength="5"></input>
-                    <button className={"btn btn-active mt-4"+loginColor +" w-full max-w-full"} disabled={!(usernameP && passP)}>Login {eMessage}</button>
+                    <button className={"btn btn-active mt-4"+loginColor +" w-full max-w-full h-fit max-h-full " + loading} disabled={!(usernameP && passP)}>Login {eMessage}</button>
                 </form>
             </div>
             <div className="divider divider-horizontal"></div>

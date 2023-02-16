@@ -7,8 +7,7 @@ export default function Logout()
 
     function esc()
     {
-        localStorage.removeItem("username");
-        localStorage.removeItem("pass");
+        localStorage.removeItem("jwtToken");
         navigate("/");
     }
 

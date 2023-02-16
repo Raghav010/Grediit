@@ -6,27 +6,50 @@ import { useEffect,useState } from "react";
 import Loading from "./Loading";
 import Logout from "./Logout";
 import Grediit from './grediit.png'
+import authUser from "./authenticateUser";
 
 function Profile()
 {
     const navigate=useNavigate();
     let urlParams=useParams(); // custom url for each profile
-    const [authorized,setAuthorized]=useState(false);
-    
+    const [fetched,setFetched]=useState(false);
+    const [userdata,setUserdata]=useState(null);
 
     // protecting this route--------------
-    // useEffect is used so it runs 
+    // and loading profile info data ; passes it on to profileInfo component
     useEffect(()=>{
-        if (localStorage.getItem("username") == null) {
-            navigate('/');
-        }
-        else
-        {
-            setAuthorized(true);
-        }
-    },[navigate,setAuthorized]);
 
-    if(authorized==false)
+        const auth=async ()=>{
+            const authed = await fetch('/api/userInfo', {
+                method: 'GET',
+                headers: {
+                    'x-auth-token': localStorage.getItem('jwtToken')
+                }
+            });
+            
+
+            //console.log(authed);
+            if (authed.ok) 
+            {
+                const data=await authed.json();
+                if(data.username!=urlParams.username)
+                    navigate('/');
+                else
+                {
+                    setUserdata(data);
+                    setFetched(true);
+                }
+            }
+            else
+            {
+                navigate('/');
+            }
+        };
+
+        auth();
+    },[]);
+
+    if(fetched==false)
     {
         return <Loading />;
     }
@@ -44,7 +67,7 @@ function Profile()
                 <div className="flex flex-col items-center lg:flex-row lg:items-start h-5/6 w-full lg:px-16 px-6 py-6">
                     <div className="flex flex-col lg:w-3/5 lg:h-3/4 space-y-2.5 items-start">
                         <img className="aspect-square w-3/4 lg:w-1/2 border-solid border border-neutral-700 border-4 rounded-full" src={ProfilePhoto}></img>
-                        <ProfileInfo username={urlParams.username}/>
+                        <ProfileInfo data={userdata}/>
                     </div>
                     <div className="lg:w-2/5 lg:h-full h-1/4 flex flex-col">
                         <div className="m-6 lg:mt-10">
