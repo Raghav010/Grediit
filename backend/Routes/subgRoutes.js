@@ -12,11 +12,11 @@ const router=express.Router();
 // req needs to have a name param
 // returns 1 if authorized
 // returns 0 if unauthorized and sends an error response
-async function gModAuth(user,gName,res)
+async function gModAuth(username,gName,res)
 {   
     try{
         // check if the user is authorized to do this
-        const data=await user.findOne({username:user},"gMod -_id");
+        const data=await user.findOne({username:username},"gMod -_id");
         if(data.gMod.has(gName))
         {
             return 1;
@@ -77,15 +77,18 @@ router.post('/delete/:name',async (req,res)=>{
         if(auth)
         {
             // delete related reports here
+            const data=await user.findOne({username:req.username},"gMod -_id");
             data.gMod.delete(req.params.name);
             await user.findOneAndUpdate({username:req.username},{gMod:data.gMod}); // updating gMod
             await subg.deleteOne({name:req.params.name});
+            console.log("done");
             goodResp(res,"deleted successfully");
         }
         
     }
     catch(err)
     {
+        console.log(err.message)
         errorResp(res,err.message);
     }
 })
@@ -104,7 +107,7 @@ router.get('/getFollowers/:name',async (req,res)=>{
             const data=await subg.findOne({name:req.params.name},"followers -_id");
             for (let followerName of data.followers.keys())
             {
-                if(data.followers[followerName]==0) // not blocked
+                if(data.followers.get(followerName)==false) // not blocked
                     normal.push(followerName);
                 else
                     blocked.push(followerName);
@@ -148,6 +151,7 @@ router.post('/req/:action', async (req,res)=>{
     // maybe check if post fields are actually present?
     try{
         const auth= await gModAuth(req.username,req.body.subg_name,res);
+        console.log(auth)
         if(auth)
         {   
             const data=await subg.findOne({name:req.body.subg_name},"requested followers followerCount -_id");
@@ -161,8 +165,8 @@ router.post('/req/:action', async (req,res)=>{
                     // increase follower count
                     data.followerCount+=1;
                     // add to folloewers
-                    data.followers[req.body.username]=0;
-                    usergFollowing.gFollowing[req.body.subg_name]="joined";
+                    data.followers.set(req.body.username,false);
+                    usergFollowing.gFollowing.set(req.body.subg_name,"joined");
                 }
                 else if(req.params.action=="reject")
                 {
@@ -196,7 +200,7 @@ router.get('/getAll',async (req,res)=>{
         const following=[];
         for (let joinedName of joinedSubgs.gFollowing.keys())
         {
-            if(joinedSubgs.gFollowing[joinedName]=="joined")
+            if(joinedSubgs.gFollowing.get(joinedName)=="joined")
                 following.push(joinedName);
         }
         const joined=following.concat([...joinedSubgs.gMod.keys()]);
@@ -208,6 +212,23 @@ router.get('/getAll',async (req,res)=>{
         errorResp(res,err.message);
     }
 })
+
+
+// gets basic info of thet sub greddit
+// no need for mod authentication
+// returns {followerCount,postCount,name,description,tags,banned}
+router.get("/getBInfo/:name",async (req,res)=>{
+    try{
+        const data=await subg.findOne({name:req.params.name},"followerCount postCount name description tags banned -_id");
+        res.status(200).json(data);
+    }
+    catch(err)
+    {
+        errorResp(res,err.message);
+    }
+})
+
+
 
 
 

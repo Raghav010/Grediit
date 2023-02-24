@@ -84,7 +84,7 @@ router.get('/followers',async (req,res)=>{
 router.get('/following',async (req,res)=>{
     try{
         const data=await user.findOne({username:req.username},"following -_id");
-        res.status(200).json({following:[...data.following]});
+        res.status(200).json({following:[...data.following.keys()]});
     }
     catch(err){
         errorResp(res,err.message);
@@ -189,7 +189,7 @@ router.post('/follow/:username',async (req,res)=>{
 
 // gets the basic info on all sub greddits whos mod is the user
 // lazy delete on gMod
-// returns {gModName:{name,description,banned,tags,followerCount,postCount}}
+// returns {gModName:{description,banned,tags,followerCount,postCount}}
 router.get('/mod/getAll', async (req,res)=>{
     try{
         gModBData={};
@@ -217,14 +217,14 @@ router.get('/mod/getAll', async (req,res)=>{
 
 // gets the basic info on all sub greddits who the user follows(joined)
 // lazy delete on gFollowing
-// returns {gFollowingName:{name,description,banned,tags,followerCount,postCount}}
+// returns {gFollowingName:{description,banned,tags,followerCount,postCount}}
 router.get('/gFollowing/getAll',async (req,res)=>{
     try{
         gFollowingBData={};
         const data=await user.findOne({username:req.username},"gFollowing -_id");
         for (let gFollowingName of data.gFollowing.keys())
         {
-            if(data.gFollowing[gFollowingName]=="joined") // only subg which he has joined
+            if(data.gFollowing.get(gFollowingName)=="joined") // only subg which he has joined
             {
                 const subgData=await subg.findOne({name:gFollowingName},"description banned tags followerCount postCount -_id");
                 if(subgData==null) // subg doesnt exist (lazy delete)
@@ -258,12 +258,12 @@ router.post('/sendSubgReq', async (req,res)=>{
         const usergData=await user.findOne({username:req.username},"gFollowing gMod -_id");
         if(!(usergData.gFollowing.has(req.body.subg_name)) && !(usergData.gMod.has(req.body.subg_name)))
         {
-            usergData.gFollowing[req.body.subg_name]="requested";
+            usergData.gFollowing.set(req.body.subg_name,"requested");
             await user.findOneAndUpdate({username:req.username},{gFollowing:usergData.gFollowing});
 
             // add in request to subg
             const requests=await subg.findOne({name:req.body.subg_name},"requested -_id");
-            requests.requested[req.username]=1;
+            requests.requested.set(req.username,1);
             await subg.findOneAndUpdate({name:req.body.subg_name},{requested:requests.requested});
 
             goodResp(res,"sent request");
