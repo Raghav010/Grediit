@@ -4,6 +4,7 @@ import LS from './LS';
 import { Route, Routes } from 'react-router-dom';
 import Mysubgs from './Mysubgs';
 import SubgPage from './Subg';
+import PublicSubgPage from './AllSubgs';
 
 // Todo
 // add greddit to login and register
@@ -28,6 +29,7 @@ function App()
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/mysubG" element={<Mysubgs />} />
         <Route path="/subG/:gName" element={<SubgPage />} />
+        <Route path="/allSubgs" element={<PublicSubgPage />} />
       </Routes>
     </>
   );  

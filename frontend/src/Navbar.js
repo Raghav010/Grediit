@@ -41,6 +41,9 @@ export default function Navbar(props) {
         <Link to="/mysubG" className='btn btn-ghost'>
           <p className="normal-case text-xl">MySubG</p>
         </Link>
+        <Link to="/allSubgs" className='btn btn-ghost'>
+          <p className="normal-case text-xl">AllSubGs</p>
+        </Link>
         {props.condRender && <Extras />}
       </div>
       <div className="navbar-end">

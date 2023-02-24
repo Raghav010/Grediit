@@ -291,9 +291,11 @@ router.post('/leaveSubg', async (req,res)=>{
         // does subg exist
         // can only leave if status is joined
         // should not be the mod
-        const followerData=await subg.findOne({name:req.body.subg_name},"followers -_id");
+        //console.log(req.body.subg_name);
+        const followerData=await subg.findOne({name:req.body.subg_name},"followers followerCount -_id");
         if(followerData!=null) //subg exists
         {
+            //console.log(followerData.followers);
             if(followerData.followers.has(req.username)) // user is a member of subg
             {
                 const subgUserData=await user.findOne({username:req.username},"gFollowing gMod -_id");
@@ -303,11 +305,12 @@ router.post('/leaveSubg', async (req,res)=>{
                 }
                 else
                 {
+                    followerData.followerCount-=1;
                     followerData.followers.delete(req.username);
-                    subgUserData.gFollowing.delete(req.body.subg_name);
+                    subgUserData.gFollowing.set(req.body.subg_name,"left");
                     // pushing to cloud
-                    await subg.findOneAndUpdate({name:req.body.subg_name},{followers:followerData.followers});
-                    await user.findOneAndDelete({username:req.username},{gFollowing:subgUserData.gFollowing});
+                    await subg.findOneAndUpdate({name:req.body.subg_name},{followers:followerData.followers,followerCount:followerData.followerCount});
+                    await user.findOneAndUpdate({username:req.username},{gFollowing:subgUserData.gFollowing});
 
                     goodResp(res,"Successfully left sub greddit");
                 }

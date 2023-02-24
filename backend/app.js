@@ -9,7 +9,7 @@ const {errorResp,goodResp}=require("./helpers/responseHelpers");
 // importing all the route groups
 const userDataRoutes=require('./Routes/userRoutes');
 const subgRoutes=require('./Routes/subgRoutes');
-
+const postRoutes=require('./Routes/postRoutes');
 
 
 
@@ -143,3 +143,5 @@ app.use('/api/user',userDataRoutes);
 // sub greddiit routes-----------------------------
 app.use('/api/subg',subgRoutes);
 
+// post routes
+app.use('/api/post',postRoutes);

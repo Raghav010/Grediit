@@ -212,7 +212,7 @@ export default function Mysubgs()
         <>
             <NavBar />
             <div className="bg-purple-50 h-screen w-screen flex flex-col items-center p-10">
-                <CreateSubg rHelp={setRefresh} rVal={refresh}/>
+                <CreateSubg rHelp={setRefresh} rVal={refresh} />
                 <DisplayModSubg indicator={refresh} rHelp={setRefresh} />
             </div>
         </>
