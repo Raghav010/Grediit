@@ -1,4 +1,4 @@
-const {user}=require('../models/userModel');
+const user=require('../models/userModel');
 const jwt=require('jsonwebtoken');
 
 
@@ -19,7 +19,6 @@ async function auth(req,res,next,apiPrefix)
     if(jwtToken)
     {
         try{
-            console.log('trying to authenticate using jwt');
             const decodedUser=jwt.verify(jwtToken,secret_token);
             //console.log(decodedUser);
             req.username=decodedUser.username;
@@ -31,10 +30,14 @@ async function auth(req,res,next,apiPrefix)
                 res.status(403).json({error:"User doesnt exist :("})
             }
             else
+            {
+                console.log('authenticated using jwt');
                 next();
+            }
         }
         catch(err){
             console.log('jwt auth failed');
+            //console.log(err.message);
             res.status(401).json({error:err.message}); // session expired or wrong token , not authorized
         }
     }

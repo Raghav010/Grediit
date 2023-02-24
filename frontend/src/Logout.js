@@ -12,8 +12,6 @@ export default function Logout()
     }
 
     return(
-        <div className="w-full h-full">
-            <button className="btn btn-outline btn-primary" onClick={esc}>Logout</button>
-        </div>
+        <button className="btn btn-outline btn-primary" onClick={esc}>Logout</button>
     );
 }
